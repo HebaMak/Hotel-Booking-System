@@ -21,13 +21,13 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build BookingApp.API/BookingApp.API.csproj --configuration Release
 
       - name: Install dotnet-ef
         run: dotnet tool install -g dotnet-ef --version 8.*
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish BookingApp.API/BookingApp.API.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Create EF Core migrations bundle
         run: dotnet ef migrations bundle --runtime linux-x64 -o ${{env.DOTNET_ROOT}}/myapp/migrations.bundle
@@ -55,7 +55,7 @@ jobs:
       - name: Login to Azure using Managed Identity
         uses: azure/login@v2
         with:
-          client-id: 30cab445-9e2b-407f-bcb4-4e97467d1f7c 
+          client-id: 30cab445-9e2b-407f-bcb4-4e97467d1f7c
           tenant-id: 5750da6a-1c1f-48a6-bd93-148a77872e28
           subscription-id: 9b5220ee-29d0-4030-ae3b-7aae1a4296e6
           enable-AzPSSession: false
@@ -63,6 +63,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: bookingapp-api01 
+          app-name: bookingapp-api01
           slot-name: Production
           package: ./myapp
